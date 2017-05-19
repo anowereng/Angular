@@ -11,10 +11,17 @@
             alert('Error');
         });
         //For Create a new student (HTTP POST)
+        /* 
         $scope.addStudent = function (aStudent) {
-            $http.post("/Student/Create", { aStudent }).error(function (responseData) {
+           $http.post("/Student/Create", { aStudent }).error(function (responseData) {
+               console.log("Error !" + responseData);
+           });
+        };*/
+        $scope.addStudent = function (aStudent) {
+            $http.post("/Student/Create", { aStudent }),(function (responseData) {
                 console.log("Error !" + responseData);
             });
+          
         };
 
     });
