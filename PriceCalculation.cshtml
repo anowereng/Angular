@@ -1,0 +1,99 @@
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CalculatePrice</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/angular.js"></script>
+</head>
+<body ng-app="myApp">
+
+    <h2>Shopping Card Example</h2>
+    <div ng-controller="CartForm">
+        <div class="col-md-6">
+            <div class="form-group">
+                <a href="javascript:void(0)" ng-click="addItem()" class="btn btn-small btn-success">+ Add</a>
+            </div>
+            <table class="table table-responsive table-hover table-bordered">
+                <tr>
+                    <th>Description</th>
+                    <th>Qty</th>
+                    <th>Cost</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                </tr>
+                @*<select class="form-control">
+                        <option value="0" label="Please Select"></option>
+                        <option ng-repeat="fruit in Fruits" value="{{fruit.id}}" ng-selected={{fruit.selected==true}|unique:fruit}>
+                                                    {{fruit.Name}}
+                                                </option>
+
+                    </select>*@
+                <tr ng-repeat="item in invoice.items">
+                    <td><input type="text" ng-model="item.description" class="form-control"></td>
+                    <td><input type="number" ng-model="item.qty" class="form-control"></td>
+                    <td><input type="number" ng-model="item.cost" class="form-control"></td>
+                    <td>{{item.qty * item.cost | currency}}</td>
+                    <td>
+                        <a href="javascript:void(0)" ng-click="removeItem($index)">X</a>
+                    </td>
+                </tr>
+            </table>
+            <label>Total:{{total() | currency}}</label>
+
+        </div>
+    </div>
+
+
+</body>
+</html>
+<script>
+    var app = angular.module("myApp", []);
+    app.controller("CartForm", function ($scope) {
+
+        /* Default this item load first time*/
+        $scope.invoice = {
+
+            items: [{
+                qty: 10,
+                description: 'item',
+                cost: 9.95
+            }]
+        };
+
+        /*  For Add Item  */
+
+        $scope.addItem = function () {
+            $scope.invoice.items.push({
+                qty: 1,
+                description: '',
+                cost: 0
+            });
+        },
+
+        /*   For Remove Item */
+
+        $scope.removeItem = function (index) {
+            $scope.invoice.items.splice(index, 1);
+        },
+
+        /*   For Total Calculation */
+        $scope.total = function () {
+            var total = 0;
+            angular.forEach($scope.invoice.items, function (item) {
+                total += item.qty * item.cost;
+            });
+            return total;
+        }
+
+
+
+    });
+
+</script>
