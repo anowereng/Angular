@@ -1,0 +1,16 @@
+/* function debit() and function credit() didnot match then submit disabled*/
+
+<button class="btn btn-primary btn-wide" type="submit" name="btnSubmit" ng-disabled="debitTotal()!=creditTotal()">
+ Submit <i class="fa fa-arrow-circle-right"></i> 
+ </button>
+ 
+/* if ng-disabled true message show*/
+
+ <span ng-show="debitTotal()!=creditTotal()" class="text-danger ml-xlg">(Debit and Credit amount not match)</span>
+ 
+ /*  text-box disabled defend on another textbox value*/
+ 
+<input type="number" ng-model="item.debit" name="VoucherList[{{$index}}].debit" class="form-control _debit" ng-disabled="item.credit>0">
+                               
+<input type="number" ng-model="item.credit" class="form-control _credit" name="VoucherList[{{$index}}].credit" ng-disabled="item.debit>0">
+                                
