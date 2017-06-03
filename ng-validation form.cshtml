@@ -1,0 +1,22 @@
+
+
+
+<form class="form-group" name="frmUser">
+            <input type="checkbox" ng-model="chkReset" />
+                   <input type="text" ng-model="dt"/>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" data-ng-model="name" name="name" required />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" data-ng-model="password" name="password" required />
+                </div>
+            </div>
+            <input type="button" value="Submit" class="btn btn-success" ng-disabled="frmUser.$invalid" />
+            <input type="button" value="Reset" class="btn btn-danger" ng-disabled="!chkReset" />
+            <input type="button" value="Reset2" class="btn btn-danger" ng-disabled="!dt" />
+        </form>
