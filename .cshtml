@@ -1,0 +1,305 @@
+
+@using System.Data
+@model SoftifyAccounting.Models.AcmVoucher
+@{
+    ViewBag.Title = " Create Voucher ";
+}
+
+<script src="~/Content/assets/ngscripts/angular.js"></script>
+<script src="~/Content/assets/ngscripts/angucomplete-alt.js"></script>
+
+<header class="page-header">
+    <h2>  Create Voucher</h2>
+</header>
+@*<link href="~/Content/assets/javascripts/autoComplete/jquery-ui.css" rel="stylesheet" />
+    <script src="~/Content/assets/javascripts/autoComplete/jquery-1.12.4.js"></script>
+    <script src="~/Content/assets/javascripts/autoComplete/jquery-ui.js"></script>*@
+<link href="~/Content/assets/javascripts/autoComplete/jquery-ui.css" rel="stylesheet" />
+<script src="~/Content/assets/javascripts/autoComplete/jquery-1.12.4.js"></script>
+<script src="~/Content/assets/javascripts/autoComplete/jquery-ui.js"></script>
+<style>
+    /*.angucomplete-dropdown {
+        overflow-y: auto;
+        max-height: 200px;
+    }*/
+    .ui-autocomplete-loading {
+        background: #fff no-repeat 95%;
+        background-image: url('../../Content/assets/images/ui-anim.gif');
+    }
+</style>
+
+<style>
+
+</style>
+
+
+<!--Error messages will be shown here-->
+@Html.Partial("_FlashMessage")
+
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+<!-- start: Truck Create page -->
+
+@using (Html.BeginForm("Create", "AcmVoucher", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+
+    @Html.AntiForgeryToken()
+
+
+    <section class="panel">
+        <div class="panel-body plr-xlglg" ng-app="voucherApp">
+            @{ int j = 1;}
+            <div class="row" ng-controller="cntrlVoucher">
+                <div class="col-md-12">
+                    
+                    <div class="col-md-3">
+                        @Html.LabelFor(model => model.dtVoucher, "Voucher Date", htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.dtVoucher, new { htmlAttributes = new { @class = "form-control", @data_plugin_datepicker = "", @placeholder = "", @required = "required", @Value = DateTime.Now.ToString("dd-MMM-yyyy") } })
+                        @Html.ValidationMessageFor(model => model.dtVoucher, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.LabelFor(model => model.String1, "Name", htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.String1, new { htmlAttributes = new { @class = "form-control", @placeholder = "", @required = "required" } })
+                        @Html.ValidationMessageFor(model => model.Designation, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-3">
+                        @Html.LabelFor(model => model.Designation, "Designation", htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.Designation, new { htmlAttributes = new { @class = "form-control", @placeholder = "", @required = "required" } })
+                        @Html.ValidationMessageFor(model => model.Department, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-3">
+                        @Html.LabelFor(model => model.Department, "Department", htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.Department, new { htmlAttributes = new { @class = "form-control", @placeholder = "", @required = "required" } })
+                        @Html.ValidationMessageFor(model => model.Department, "", new { @class = "text-danger" })
+                    </div>
+
+                    <!-- ng search end-->
+
+                </div><!-- Div col-3 end-->
+
+                <div class="col-md-12 mt-xlg">
+                    @*<div class="form-group">
+                            <a href="javascript:void(0)" ng-click="addVoucher()" class="btn btn-small btn-success">+ Add</a>
+                        </div>*@
+                    <header class="panel-heading p-xs mr-lg">
+                        <div class="row">
+                            <div class="col-sm-1">
+                                @Html.LabelFor(model => model.VoucherDesc, "Description", htmlAttributes: new { @class = "control-label" })
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.TextAreaFor(model => model.VoucherDesc, new { @class = "form-control", @rows = "2", @cols = "20", @placeholder = "Enter Voucher Details ", @Required = "required" })
+                            </div>
+                            <div class="col-sm-2 pull-right">
+                                @*<input type="text" class="form-control input-sm" name="TableSearch" placeholder="Search" id="TableSearch" />*@
+                                <button class="mb-xs mt-xs mr-xs btn btn-primary ml-lg" type="button" ng-click="addVoucher()">
+                                    Add More <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="scrollable visible-slider colored-slider" data-plugin-scrollable style="height: 300px;">
+                        <div class="scrollable-content">
+
+                            <table class="table table-bordered table-striped mb-none" id="datatable-default tblVoucher">
+                                <thead>
+                                    <tr>
+
+                                        <th> Account Name </th>
+                                        <th> Notes 1 </th>
+                                        <th> Notes 2 </th>
+                                        <th> Debit </th>
+                                        <th> Credit</th>
+                                        <th> Action</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in voucher.item">
+                                        <td class="col-md-3">
+                                            <input type="text" ng-model="item.acName" class="form-control acName" name="acName">
+                                            <input type="hidden" ng-model="item.accId" class="form-control _AccId" name="VoucherList[{{$index}}].AccId">
+                                            <input type="hidden" ng-model="item.accCode" class="form-control _AccCode" name="VoucherList[{{$index}}].AccCode">
+                                            <input type="hidden" ng-model="item.accName" class="form-control _AccName" name="VoucherList[{{$index}}].AccName">
+                                        </td>
+
+
+                                        <td>
+                                            <input type="text" ng-model="item.notes1" class="form-control" name="VoucherList[{{$index}}].notes1">
+                                        </td>
+                                        <td>
+                                            <input type="text" ng-model="item.notes2" class="form-control" name="VoucherList[{{$index}}].notes2">
+                                        </td>
+                                        <td>
+                                            <input type="number" ng-model="item.debit" name="VoucherList[{{$index}}].debit" class="form-control _debit" ng-disabled="item.credit>0">
+                                        </td>
+                                        <td>
+                                            <input type="number" ng-model="item.credit" class="form-control _credit" name="VoucherList[{{$index}}].credit" ng-disabled="item.debit>0">
+                                        </td>
+
+                                        <td class="center">
+                                            <a href="javascript:void(0)" ng-click="removeItem($index)" ng-disabled="isDisabled" ng-model="isDisabled" >X</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </div>
+                    <table class="table table-striped mb-none" style="border-top: none;">
+
+                        <tbody>
+
+                            <tr>
+                                <td class="text-left pull-left">
+                                    <button class="btn btn-primary btn-wide" type="submit" name="btnSubmit" ng-disabled="debitTotal()!=creditTotal()">
+                                        Submit <i class="fa fa-arrow-circle-right"></i>
+                                    </button>
+                                    <span ng-show="debitTotal()!=creditTotal()" class="text-danger ml-xlg">(Debit and Credit amount not match)</span>
+                                </td>
+                                <td class="text-right col-sm-1 "><label class="text-bold">Total = </label></td>
+                                <td class="col-sm-2"><label class="text-bold">{{debitTotal() | currency:"Tk.":2}}</label></td>
+                                <td class="col-sm-3"><label class="text-bold">{{creditTotal() | currency:"Tk.":2}}</label></td>
+                                <td class="hidden"><input type="text" ng-model="debitTotal()" class="form-control" name="VAmount" value="{{debitTotal()}}"></td> 
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+                }
+
+<script>
+    var app = angular.module("voucherApp", ['angucomplete-alt']);
+    app.controller("cntrlVoucher",
+        function ($scope, $http) {
+
+            /* Default this item load first time*/
+            $scope.voucher = {
+                item: [
+                    {
+                        acName: '',
+                        notes1: '',
+                        notes2: '',
+                        debit: 0,
+                        credit: 0
+                    }
+                ]
+            };
+
+            /*  For Add Item  */
+
+            $scope.addVoucher = function () {
+                $scope.voucher.item.push({
+                    acName: '',
+                    notes1: '',
+                    notes2: '',
+                    debit: 0,
+                    credit: 0
+                });
+            },
+
+            /*   For Remove Item */
+                $scope.removeItem = function (index) {
+                    if (index == 0) {
+                        //alert('minimum fill one row');
+                        $scope.isDisabled = true;
+                    } else {
+                        $scope.voucher.item.splice(index, 1);
+                    }
+                  
+                   
+                },
+
+            /*   For Debit and Credit Calculation */
+                $scope.debitTotal = function () {
+                    var total = 0;
+                    angular.forEach($scope.voucher.item,
+                        function (item) {
+                            total += item.debit;
+                        });
+                    return total;
+                }
+
+            $scope.creditTotal = function () {
+                var total = 0;
+                angular.forEach($scope.voucher.item,
+                    function (item) {
+                        total += item.credit;
+                    });
+                return total;
+            }
+        });
+
+    /* ng script end*/
+
+    /* JS code here*/
+    $(document).ready(function ($) {
+        /* search here*/
+        $(document).on('keyup', '.acName', function () {
+            event.preventDefault();
+            $(".acName").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '../ACMVoucher/GetCPV',
+                        data: { term: request.term },
+                        dataType: 'json',
+                        method: 'GET',
+                        success: function (data) {
+                            response($.map(data,
+                                function (item) {
+                                    //debugger;
+                                    return {
+                                        label: item.AccName + " (" + item.AccCode + ")",
+                                        value: item.AccName,
+                                        AccId: item.AccId,
+                                        AccCode: item.AccCode,
+                                        AccName: item.AccName,
+                                        Balance: item.Balance
+                                    };
+                                }));
+
+                        } //success parameter end
+
+                    }); //jquery ajax end
+
+                }, //source parameter end
+
+                select: function (event, ui) {
+                    var idd = duplicateCheck(ui.item.AccId);
+                    if (idd == 1) {
+                        alert("Voucher has already selected list.");
+                        count = 0;
+                        return false;
+                    } else {
+                        $(this).closest("td").find('._AccId').val(ui.item.AccId);
+                        $(this).closest("td").find('._AccCode').val(ui.item.AccCode);
+                        $(this).closest("td").find('._AccName').val(ui.item.AccName);
+                        return true;
+                    }
+                    
+                } //select end
+            }); // ato end
+
+        });// search end
+
+        //Select Duplicate Item Check
+        var count = 0;
+        function duplicateCheck(AccId) {
+            $('#tblVoucher').find("tr:gt(0)").each(function (i, row) {
+                var val = $(row).find(".__AccId").val();
+                if (val == AccId) {
+                    return count = 1;
+                }
+
+            });
+            return count;
+        }
+
+    });
+    /* JS code end*/
+</script>
