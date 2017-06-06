@@ -1,0 +1,7 @@
+  <label>Check me to select: <input type="checkbox" ng-model="Pselected"></label>
+                            <input type="checkbox" ng-checked="Pselected">
+                            <input type="checkbox" ng-checked="Pselected">
+                            <input type="checkbox" ng-checked="Pselected">
+                            <input type="checkbox" ng-checked="Pselected">
+                            <input type="checkbox" ng-checked="Pselected">
+                            <input type="checkbox" ng-checked="Pselected">
