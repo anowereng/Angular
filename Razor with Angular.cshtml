@@ -1,9 +1,110 @@
-<div ng-init="data = [
- @foreach (var item in ViewBag.CountryList) {
- <text>{CountryCode: '@item.CountryCode' , CountryName: '@item.CountryName' , CountrySName: '@item.CountrySName',
- Currency: '@item.CurrencyName',Time: '@item.TimeDifference' },</text> }]">
+@using System.Data
+@using Newtonsoft.Json
+@using SoftifyPOS.Models.Helpers
+@model SoftifyPOS.Models.HouseKeeping.Country
+@{
+    ViewBag.Title = "Country Save";
 
-                                 <table class="table table-bordered table-striped mb-none">
+}
+<script src="~/Content/assets/ngscripts/angular.js"></script>
+<header class="page-header">
+    <h2>Fuel Issue </h2>
+</header>
+
+<!--Error messages will be shown here-->
+@Html.Partial("_FlashMessage")
+
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+<!-- start: Fleet Create page -->
+
+@using (Html.BeginForm("CountrySave", "Country", FormMethod.Post, new { id = "POSCountrySave" }))
+{
+
+    @Html.AntiForgeryToken()
+    <section class="panel" ng-app="myApp" ng-controller="myCtrl">
+
+        <div class="panel-body plr-xlglg">
+
+            <div class="row">
+
+                <div class="col-md-3  mt-none ml-md">
+
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            @Html.HiddenFor(model => model.CountryId, new { @class = "control-label " })
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CountryName, "Country Name", htmlAttributes: new { @class = "control-label" })
+                                @Html.EditorFor(model => model.CountryName, new { htmlAttributes = new { @class = "form-control", @placeholder = "", @Required = "required" ,ng_model= "Country.CountryName"} })
+                                @Html.ValidationMessageFor(model => model.CountryName, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CountrySName, "Country Name (Short)", htmlAttributes: new { @class = "control-label" })
+                                @Html.EditorFor(model => model.CountrySName, new { htmlAttributes = new { @class = "form-control", @placeholder = "", @Required = "required", ng_model = "Country.CountrySName" } })
+                                @Html.ValidationMessageFor(model => model.CountrySName, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CurrencyName, "Currency Name", htmlAttributes: new { @class = "control-label " })
+                                @Html.DropDownList("CurrencyName", new SelectList(ViewBag.CurrencyNameList, "Name", "Name"), new { @class = "form-control populate ", @Required = "required", ng_model = "Country.Currency" })
+                                @Html.ValidationMessageFor(model => model.CurrencyName, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CurrencySName, "Currency Name (Short)", htmlAttributes: new { @class = "control-label " })
+                                @Html.DropDownList("CurrencySName", new SelectList(ViewBag.CurrencyNameShortList, "Name", "Name"), new { @class = "form-control populate ", @Required = "required", ng_model = "Country.CurrencySName" })
+                                @Html.ValidationMessageFor(model => model.CurrencySName, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TimeDifference, "Time Difference", htmlAttributes: new { @class = "control-label " })
+                                @Html.DropDownList("TimeDifference", new SelectList(ViewBag.TimeDifferenceList, "Name", "Name"),  new { @class = "form-control populate ", @Required = "required", ng_model = "Country.Time" })
+                                @Html.ValidationMessageFor(model => model.TimeDifference, "", new { @class = "text-danger" })
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 mt-lg">
+                            <button class="btn btn-success btn-wide " type="button" name="btnSubmit" id="FuelIssueSave">
+                                Submit <i class="fa fa-arrow-circle-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-8 pull-right">
+                    <header class="panel-heading p-xs mr-lg">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h2 class="panel-title p-xs">Issue List</h2>
+                            </div>
+                            <div class="col-md-4 pull-right">
+                                <input type="text" class="form-control input-sm" name="TableSearch" placeholder="Search" id="TableSearch"/>
+                            </div>
+                        </div>
+                    </header>
+                    <!-- ViewBag Data Pass Angular Model-->
+
+                                                <div ng-init="data = [
+                                 @foreach (var item in ViewBag.CountryList)
+                                 {
+                                     <text>
+                                         {CountryCode: '@item.CountryCode' ,
+                                          CountryName: '@item.CountryName' ,
+                                          CountrySName: '@item.CountrySName',
+                                          Currency: '@item.CurrencyName',
+                                          CurrencySName: '@item.CurrencySName',
+                                          Time: '@item.TimeDifference'
+                                  },
+                                     </text>
+                                 }
+                                 ]">
+                     <!-- End ViewBag Data Pass Angular Model-->
+
+                        <div class="scrollable visible-slider colored-slider" data-plugin-scrollable style="height: 430px;">
+                            <div class="scrollable-content">
+
+                                <table class="table table-bordered table-striped mb-none">
                                     <thead>
                                         <tr>
                                             <th> Country Code </th>
@@ -48,6 +149,20 @@
                                     </tbody>
                                 </table>
 
+                            </div>
+                        </div>
+
+
+
+                    </div>
+            </div>
+
+        </div>
+        </div>
+
+    </section>
+}
+
 <script>
     var myApp = angular.module("myApp", []);
 
@@ -55,8 +170,9 @@
         $scope.Country = {};
         $scope.updateEmployee = function (model) {
             $scope.Country = angular.copy(model);
-            alert(model.CountryName);
         };
     });
 
 </script>
+
+
