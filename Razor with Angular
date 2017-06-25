@@ -1,0 +1,62 @@
+<div ng-init="data = [
+ @foreach (var item in ViewBag.CountryList) {
+ <text>{CountryCode: '@item.CountryCode' , CountryName: '@item.CountryName' , CountrySName: '@item.CountrySName',
+ Currency: '@item.CurrencyName',Time: '@item.TimeDifference' },</text> }]">
+
+                                 <table class="table table-bordered table-striped mb-none">
+                                    <thead>
+                                        <tr>
+                                            <th> Country Code </th>
+                                            <th> Country Name </th>
+                                            <th> Short Name </th>
+                                            <th> Currency Name </th>
+                                            <th> Time  </th>
+                                            <th> Action  </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                         <tr ng-repeat="model in data">
+                                             <td>
+                                                 {{model.CountryCode}}
+                                             </td>
+                                             <td>
+                                                 {{model.CountryName}}
+                                             </td>
+                                             <td>
+                                                 {{model.CountrySName}}
+                                             </td>
+
+                                             <td>
+                                                 {{model.Currency}}
+                                             </td>
+                                             <td>
+                                                 {{model.Time}}
+                                             </td>
+                                             <td class="text-center">
+                                                   
+                                                    <input type="button" value="Edit" class="btn btn-success input-sm" ng-click="updateEmployee(model)" />
+                                                    <a href="javascript:void(0)" class="text-danger black DeleteDataLocation" data-value="">
+                                                        <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+                                                    </a>
+
+                                                </td>
+                                            </tr>
+                                        
+
+
+                                    </tbody>
+                                </table>
+
+<script>
+    var myApp = angular.module("myApp", []);
+
+    myApp.controller("myCtrl", function ($scope) {
+        $scope.Country = {};
+        $scope.updateEmployee = function (model) {
+            $scope.Country = angular.copy(model);
+            alert(model.CountryName);
+        };
+    });
+
+</script>
