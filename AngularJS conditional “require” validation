@@ -1,0 +1,41 @@
+
+<!---- First Example ------>
+<form name="myForm">
+            <input type="text" ng-model="fields.one" name="firstField" ng-required="!(fields.one.length || fields.two.length || fields.three.length)" />
+            <br/>
+            <input type="text" name="secondField" ng-required="!(fields.one.length || fields.two.length || fields.three.length)" ng-model="fields.two" />
+            <br/>
+            <input type="text" ng-model="fields.three" name="thirdField" ng-required="!(fields.one.length || fields.two.length || fields.three.length)" />
+            <br/>
+            <button type="submit" ng-disabled="!myForm.$valid">Submit</button>
+</form>
+
+
+<!--- Second Example ---->
+
+<form name="contactForm" novalidate>
+    What's up doc?
+    <textarea ng-model="contact.text"></textarea>
+    <br/>
+    Email:
+    <input type="text" name="email" ng-model="contact.email" ng-required="isOneContactRequired()">
+    <br/>
+    Mobile:
+    <input type="text" name="mobile" ng-model="contact.mobile" ng-required="isOneContactRequired()">
+    <br/>
+    Address:
+    <input type="text" name="address" ng-model="contact.address" ng-required="isOneContactRequired()">
+    <br/>
+    <button ng-show="contactForm.$valid" ng-click="send()">Send!</button>
+</form>
+
+$scope.contact = {};
+$scope.isOneContactRequired = function () {
+	return !($scope.contact.email || $scope.contact.mobile || $scope.contact.address);
+};
+$scope.send = function() {
+	// Here we would send the contact info to the server...
+	console.info('Sent!');
+};
+<!--- Details Here ----->
+http://www.codesandnotes.be/2015/03/31/angularjs-conditional-require-validation/
