@@ -1,0 +1,196 @@
+
+@model SoftifyERP.Models.InvIssueReturn
+@{
+    ViewBag.Title = "Create Issue Return";
+}
+
+<header class="page-header">
+    <h2>Create Issue Return </h2>
+</header>
+
+
+<script src="~/Content/assets/ngscripts/angular.js"></script>
+<!--Error messages will be shown here-->
+@Html.Partial("_FlashMessage")
+
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+
+@using (Html.BeginForm("Create", "InvIssueReturn", FormMethod.Post, new { @class = "form-horizontal", id = "Return" }))
+{
+
+    @Html.AntiForgeryToken()
+    <section class="panel">
+
+        <header class="panel-heading">
+            @*<h2 class="panel-title">Create Department</h2>*@
+        </header>
+
+        <div class="panel-body" ng-app="InvIssueApp" ng-controller="InvIssueCtrl">
+
+            <div class="form-group">
+
+                <div class="col-md-2">
+                    @Html.LabelFor(model => model.dtDate, "Return Date", htmlAttributes: new { @class = "control-label btn-block" })
+                </div>
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.dtDate, new { htmlAttributes = new { @class = "form-control", @data_plugin_datepicker = "", @placeholder = "", @required = "required", @Value = DateTime.Now.ToString("dd-MMM-yyyy") } })
+                    @Html.ValidationMessageFor(model => model.dtDate, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-md-2">
+                    @Html.LabelFor(model => model.IssueId, "Issue No", htmlAttributes: new { @class = "control-label btn-block" })
+                </div>
+
+                <div class="col-md-5">
+                    @Html.DropDownList("IssueId", new SelectList(ViewBag.IssueNoS, "Id", "Name"), "---Please Select---", new { ng_model = "InvIssueId", ng_change = "InvIssue()", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.IssueId, "", new { @class = "text-danger" })
+
+
+                </div>
+            </div>
+            @Html.HiddenFor(model => model.OthersString)
+            <div class="form-group">
+                <div class="col-md-2">
+                    @Html.LabelFor(model => model.IssueId, "Remarks", htmlAttributes: new { @class = "control-label btn-block" })
+                </div>
+                <div class="col-md-10">
+                    @Html.TextAreaFor(model => model.Remarks, new { @class = "form-control",@rows=5 })
+                    @Html.ValidationMessageFor(model => model.IssueId, "", new { @class = "text-danger" })
+                </div>
+              
+            </div>
+            <div id="_Preview" class="form-group">
+                &nbsp;
+            </div>
+            <div class="row">
+                <table class="table table-bordered table-striped table-condensed mb-none" id="issueReturnTable">
+                    <thead>
+                        <tr>
+                            <th>#SL</th>
+                            <th>Product Name</th>
+                            <th>Spec</th>
+                            <th>Color</th>
+                            <th>Unit</th>
+                            <th>IssueQty</th>
+                            <th>Return Qty</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr ng-repeat="x in InvIssueData">
+                            
+                            <td class="hidden">
+                                <input type="hidden" ng-model="x.prdNm" class="form-control" name="ReturnSubs[{{$index}}].prdNm" value={{x.prdNm}}>
+
+                                <input type="hidden" ng-model="x.Spec" class="form-control" name="ReturnSubs[{{$index}}].Spec" value={{x.Spec}}>
+
+                                <input type="hidden" ng-model="x.Color" class="form-control" name="ReturnSubs[{{$index}}].Color" value={{x.Color}}>
+
+                                <input type="hidden" ng-model="x.Unit" class="form-control" name="ReturnSubs[{{$index}}].Unit" value={{x.Unit}}>
+
+                                <input type="hidden" ng-model="x.IssueQty" class="form-control" name="ReturnSubs[{{$index}}].IssueQty" value={{x.IssueQty}}>
+
+                                <input type="hidden" ng-model="x.Rate" class="form-control" name="ReturnSubs[{{$index}}].Rate" value={{x.Rate}}>
+
+                                <input type="hidden" ng-model="x.prdId" class="form-control" name="ReturnSubs[{{$index}}].prdId" value={{x.PrdId}}>
+                            </td>
+
+                            <td> {{$index+1}} </td>
+
+                            <td> {{x.prdNm}} </td>
+
+                            <td> {{x.Spec}} </td>
+
+                            <td> {{x.Color}} </td>
+
+                            <td> {{x.Unit}} </td>
+
+                            <td>
+                                {{x.IssueQty}}
+                              
+
+                            </td>
+
+                            <td class="col-sm-2">
+                                <input type="number" ng-model="x.ReturnQty" class="form-control" name="ReturnSubs[{{$index}}].ReturnQty" required="">
+
+                                <span ng-show="x.IssueQty<x.ReturnQty" class="text-danger">Return qty is >  issue qty</span>
+                         
+                            </td>
+                           
+                            <td class="center">
+                                <a href="javascript:void(0)" ng-click="removeItem($index)" style="cursor: pointer"><i class="fa fa-times"></i></a>
+                            </td>
+                           
+                        </tr>
+          
+                    </tbody>
+                </table>
+            </div>
+           
+        </div>
+
+        <footer class="panel-footer">
+            <div class="row">
+                <div class="col-sm-9 col-sm-offset-3">
+
+                    <button class="btn btn-success btn-wide" type="submit" name="btnSubmit" id="DepartmentSave" ng-disabled="checkAmount()">
+                        Submit <i class="fa fa-arrow-circle-right"></i>
+                    </button>
+
+                    <a href="@Url.Action("Index", "InvIssueReturn")" class="btn btn-primary">
+                        <i class="fa fa-arrow-circle-left"></i> Back to list
+                    </a>
+
+
+                </div>
+            </div>
+        </footer>
+    </section>
+}
+
+<script>
+
+    var InvApp = angular.module('InvIssueApp', []);
+
+    InvApp.controller('InvIssueCtrl', function ($scope, $http) {
+        $('#issueReturnTable').hide();
+        $scope.InvIssueData = [];
+        $scope.InvIssue = function () {
+            $http({
+                method: 'Post',
+                url: '/InvIssueReturn/IssueData',
+                data: JSON.stringify({ Id: $scope.InvIssueId })
+            }).
+                then(function (data) {
+                    $scope.InvIssueData = data.data;
+                    //alert($scope.InvIssueData[0].prdNm);
+                });
+            $('#issueReturnTable').show();
+        }
+
+        /*   For Remove Item */
+        $scope.removeItem = function (index) {
+            if ($scope.InvIssueData.length == 1) {
+                //minimum fill one row
+            } else {
+                $scope.InvIssueData.splice(index, 1);
+            }
+        }
+
+
+        $scope.checkAmount = function () {
+            if (model.questions.length > 1) { // your question said "more than one element"
+                return true;
+            }
+            else {
+                return false;
+            }
+        };
+
+    });
+
+</script>
