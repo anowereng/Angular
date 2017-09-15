@@ -1,0 +1,102 @@
+        <tr ng-repeat="item in mr.item">
+                      
+                        <td class="col-md-3">
+                            @Html.DropDownList("MRList[{{$index}}].ProdCatId", new SelectList(ViewBag.CategoryList, "Id", "Name"), "---Please Select---",
+                                new { @class = "form-control", @Required = "required", ng_model = "item.ProdCatId", ng_change= "getSubCategory(item.ProdCatId,{{$index}})" })
+                        </td>
+
+                        <td>  
+                            <select ng-model="ProdCatId" name="SubCatId"
+                                    ng-disabled="loadSubCatList[{{$index}}] == 0"
+                                    ng-options="a.ProdId as a.ProdName for a in loadSubCatList[{{$index}}]"
+                                    class="form-control">
+                                <option value="">-- Choose Sub-Category --</option>
+                            </select>
+                   
+                        </td>
+                        <td>
+                            <input type="number" ng-model="item.Unit" class="form-control input-sm" name="MRList[{{$index}}].Unit">
+                        </td>
+                        <td>
+                            <input type="number" ng-model="item.Qty" class="form-control input-sm" name="MRList[{{$index}}].Qty">
+                        </td>
+                        <td>
+                            <input type="number" ng-model="item.Price" name="MRList[{{$index}}].Price" class="form-control input-sm">
+                        </td>
+                        <td>
+                            <input type="number" ng-model="item.Amount" name="MRList[{{$index}}].Amount" class="form-control input-sm">
+                        </td>
+
+                        <td class="center">
+                            <a href="javascript:void(0)" ng-click="removeItem($index)" style="cursor: pointer"><i class="fa fa-times"></i></a>
+                        </td>
+                    </tr>
+                    
+                    
+                    <script>
+    var app = angular.module("mrApp", []);
+    app.controller("cntrlMr",
+        function ($scope, $http) {
+
+            /* Default this item load first time*/
+            $scope.mr = {
+                item: [
+                    {
+                        ProdCatId:'',
+                        ProdName: '',
+                        Unit: '',
+                        Qty: '',
+                        Price: '',
+                        Amount: 0
+                    }
+                ]
+            };
+
+            /*  For Add Item  */
+            $scope.addMr = function () {
+                $scope.mr.item.push({
+                    ProdCatId: '',
+                    ProdName: '',
+                    Unit: '',
+                    Qty: '',
+                    Price: '',
+                    Amount: 0
+                });
+
+
+            }
+
+            /*   For Remove Item */
+            $scope.removeItem = function (index) {
+                if ($scope.mr.item.length == 1) {
+                    //minimum fill one row
+                } else {
+                    $scope.mr.item.splice(index, 1);
+                }
+            }
+
+
+            $scope.loadSubCatList = [];
+
+            $scope.getSubCategory = function(id,index) {
+                //item.ProdCatId
+                if (id!=0) {
+                    $http({
+                            method: 'POST',
+                            url: '/ProductMR/GetProductByCat/',
+                            data: JSON.stringify({ catId: id })
+                        }).
+                        then(function (data) {
+                            $scope.loadSubCatList[index] = data.data;
+                            //alert(data.data.PcatId);
+                        });
+                }
+                else {
+                    $scope.loadSubCatList[index] = 0;
+                }
+            }
+
+
+        });
+
+</script>
