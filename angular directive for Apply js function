@@ -1,0 +1,54 @@
+    app.directive("datepicker", function () {
+
+        function link(scope, element, attrs) {
+            // CALL THE "datepicker()" METHOD USING THE "element" OBJECT.
+
+            $('[datepicker]').each(function () {
+                var $this = $(this),
+                    opts = {};
+
+                var pluginOptions = $this.data('plugin-options');
+                if (pluginOptions)
+                    opts = pluginOptions;
+
+                $this.themePluginDatePicker(opts);
+            });
+          
+
+        }
+        return {
+            require: 'ngModel',
+            link: link
+        };
+    });
+
+
+    app.directive("ngselect2", function () {
+
+        function link2(scope, element, attrs) {
+            // CALL THE "datepicker()" METHOD USING THE "element" OBJECT.
+            $('[ngselect2]').each(function () {
+                var $this = $(this),
+                    opts = {};
+
+                var pluginOptions = $this.data('plugin-options');
+                if (pluginOptions)
+                    opts = pluginOptions;
+
+                $this.themePluginSelect2(opts);
+            });
+
+           
+            
+        }
+
+        return {
+            require: 'ngModel',
+            link: link2
+        };
+    });
+    
+    ------------------- Usage -------------------------
+    
+   for datepicker=> datepicker=""
+   for select2=> ngselect2 = "" 
