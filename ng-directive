@@ -1,0 +1,33 @@
+ngApp.directive('datepickers', function () {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        link: function (scope, element, attrs, ngModelCtrl) {
+            $(function () {
+                element.datepicker({
+                    dateFormat: 'dd/mm/yy',
+                    onSelect: function (date) {
+                        scope.$apply(function () {
+                            ngModelCtrl.$setViewValue(date);
+                        });
+                    }
+                });
+
+             
+            });
+        }
+    }
+});
+
+---------------- Use -------------------
+2.
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="~/Content/assets/javascripts/jquery.js"></script>
+<script src="~/Content/assets/ngscripts/angular.js"></script>
+<script src="~/Content/assets/ngscripts/masterApp.js"></script>
+<script src="~/Content/assets/ngscripts/ng-directive.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+3.
+datepickers=""
+
+
