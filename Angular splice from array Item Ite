@@ -14,4 +14,7 @@
                 }
                
             }
-        }
+        -------------- Call
+        <td class="center col-md-1">
+         <a href="javascript:void(0)" ng-click="removeItem(x.ItemId)" style="cursor: pointer"><i class="fa fa-times"></i></a>
+             </td>
