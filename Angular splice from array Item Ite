@@ -1,0 +1,17 @@
+      
+      
+      // Delete multiple row use ItemId
+      
+      /*   For Remove Item */
+        $scope.removeItem = function (index) {
+            if ($scope.InvCSData.length == 1) {
+                //minimum fill one row
+            } else {
+                for (var i = $scope.InvCSData.length - 1; i >= 0; i--) {
+                    if ($scope.InvCSData[i].ItemId == index) {
+                        $scope.InvCSData.splice(i, 1);
+                    }
+                }
+               
+            }
+        }
