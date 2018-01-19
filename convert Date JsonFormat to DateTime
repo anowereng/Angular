@@ -6,3 +6,11 @@
     
     ------------ use ---------------------------
  {{model.dtEntry | dateFilter | date: 'dd-MMM-yyyy'}}
+
+
+-------------------- This use for edit function and set date --------------------------
+    
+        $scope.updateCategory = function (model) {
+            $scope.Category = angular.copy(model);
+            $scope.Category.dtEntry = $filter("date")(parseInt(model.dtEntry.substr(6)), 'dd-MMM-yyyy');
+        };
