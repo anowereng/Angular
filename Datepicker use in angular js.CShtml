@@ -1,25 +1,26 @@
-   -------- Initialized DateTime in angular-------------------
-   var date=$filter("date")(Date.now(), 'dd-MMM-yyyy') ;
+//-------- Initialized DateTime in angular-------------------
+
+1.var date=$filter("date")(Date.now(), 'dd-MMM-yyyy') ;
         $scope.Category = { dtdate: date };
  
- 2. angular model use in datepicker 
+2. angular model use in datepicker 
  
 ng_model = "Category.dtdate",                   
-datepicker = "",    
+datepicker = "",    // directive name is datepicker
 
 3.call function and date pass in scope area 
 <button class="btn btn-danger btn-wide" type="button" name="btnSubmits" ng-click="SubmitCat(Category)">
 Submit <i class="fa fa-arrow-circle-right"></i>
 </button>
 
-4. check date use funcion in scope
+4. pass date use funcion in scope
 
 $scope.SubmitCat = function (model) {
  alert(model.dtdate)
 }
               
-    datepicker also work in anular model , it's get new date and filter date    
-    -------- Directive Use DateTime in angular-------------------
+    //'datepicker' also work in anular model , it's get new date and filter date    
+   // -------- Directive Use DateTime in angular-------------------
         myApp.directive('datepicker', function ($filter) {
         return {
             restrict: 'A',
