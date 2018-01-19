@@ -1,0 +1,60 @@
+   -------- Initialized DateTime in angular-------------------
+   var date=$filter("date")(Date.now(), 'dd-MMM-yyyy') ;
+        $scope.Category = { dtdate: date };
+ 
+ 2. angular model use in datepicker 
+ 
+ng_model = "Category.dtdate",                   
+datepicker = "",    
+
+3.call function and date pass in scope area 
+<button class="btn btn-danger btn-wide" type="button" name="btnSubmits" ng-click="SubmitCat(Category)">
+Submit <i class="fa fa-arrow-circle-right"></i>
+</button>
+
+4. check date use funcion in scope
+
+$scope.SubmitCat = function (model) {
+ alert(model.dtdate)
+}
+              
+    datepicker also work in anular model , it's get new date and filter date    
+    -------- Directive Use DateTime in angular-------------------
+        myApp.directive('datepicker', function ($filter) {
+        return {
+            restrict: 'A',
+            require: 'ngModel',
+            compile: function () {
+                return {
+                    pre: function (scope, element, attrs, ngModelCtrl) {
+                        var format, dateObj;
+                        format = (!attrs.dpFormat) ? 'dd-M-yyyy' : attrs.dpFormat;
+                        if (!attrs.initDate && !attrs.dpFormat) {
+                            // If there is no initDate attribute than we will get todays date as the default
+                            dateObj = new Date();
+
+                            //scope[attrs.ngModel] = dateObj.getDate() + '/' + (dateObj.getMonth() + 1) + '/' + dateObj.getFullYear();
+                            scope[attrs.ngModel] = $filter("date")(dateObj, 'dd-MMM-yyyy')
+                            
+                        } else if (!attrs.initDate) {
+                            // Otherwise set as the init date
+                            scope[attrs.ngModel] = attrs.initDate;
+                        } else {
+                            // I could put some complex logic that changes the order of the date string I
+                            // create from the dateObj based on the format, but I'll leave that for now
+                            // Or I could switch case and limit the types of formats...
+                        }
+                        // Initialize the date-picker
+                        $(element).datepicker({
+                            format: format,
+                        }).on('changeDate', function (ev) {
+                            // To me this looks cleaner than adding $apply(); after everything.
+                            scope.$apply(function () {
+                                ngModelCtrl.$setViewValue(ev.format(format));
+                            });
+                        });
+                    }
+                }
+            }
+        }
+    });
