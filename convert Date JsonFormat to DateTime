@@ -14,3 +14,13 @@
             $scope.Category = angular.copy(model);
             $scope.Category.dtEntry = $filter("date")(parseInt(model.dtEntry.substr(6)), 'dd-MMM-yyyy');
         };
+
+
+========== Convert Date time foreach loop ==========================
+
+        $scope.convertDate=  function(){
+            for (var i = 0; i < $scope.LongTermData.length; i++) {
+                $scope.LongTermData[i].dtLoanFrom = $filter("date")(parseInt($scope.LongTermData[i].dtLoanFrom.substr(6)), 'dd-MMM-yyyy');
+                $scope.LongTermData[i].dtLoanTo = $filter("date")(parseInt($scope.LongTermData[i].dtLoanTo.substr(6)), 'dd-MMM-yyyy');
+            }
+        }
