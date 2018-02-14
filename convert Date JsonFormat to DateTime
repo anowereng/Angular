@@ -24,3 +24,13 @@
                 $scope.LongTermData[i].dtLoanTo = $filter("date")(parseInt($scope.LongTermData[i].dtLoanTo.substr(6)), 'dd-MMM-yyyy');
             }
         }
+====================================== FirstDate / LastDate  =============================
+
+                    (---------- Without format ------------)
+                  //var date = new Date();
+                //var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);  // for firstDate 
+                //var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0); // for lastDate
+
+                var dtStart =  $filter("date")(dates.getFullYear() + '-' + ('0' + (dates.getMonth() + i+1)).slice(-2) + '-' + ('0' + 1).slice(-2), 'dd-MMM-yyyy');
+
+                var dtEnd = $filter("date")(dates.getFullYear() + '-' + ('0' + (dates.getMonth() + i + 1+1)).slice(-2) + '-' + ('0' + 0).slice(-2), 'dd-MMM-yyyy');
