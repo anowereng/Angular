@@ -1,0 +1,19 @@
+ngApp.directive('title', function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            $(element).hover(function () {
+                // on mouseenter
+                $(element).tooltip('show');
+            }, function () {
+                // on mouseleave
+                $(element).tooltip('hide');
+            });
+        }
+    };
+});
+
+// ==================   TOOL-TIP USE IN ANGULAR JS ==================================
+
+//<input type="text" class="form-control input-sm" ng-model="x.Address" readonly name="TripLocationinfo[{{$index}}].Address" 
+title={{x.Address}} data-placement="top" data-delay="500" data-toggle="tooltip" />
