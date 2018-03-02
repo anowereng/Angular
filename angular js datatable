@@ -1,0 +1,115 @@
+<script>
+    angular.module('TestApp', ['TestApp.controllers', 'datatables']);
+
+    angular.module('TestApp.controllers', []).controller('testController', function ($scope, DTOptionsBuilder, DTColumnBuilder, $http) {
+
+        $scope.userList = [];
+        //$http({
+        //    method: 'GET',
+        //    url: '/Product/GetProductList',
+        //}).then(function(data) {
+        //    $scope.userList = data.data;
+        //});
+
+        $scope.vm = {};
+
+        $scope.vm.dtOptions = DTOptionsBuilder.newOptions()
+          .withOption('order', [0, 'asc']);
+
+        $scope.userList = [{
+            "productid": 1001456,
+            "productname": "Spring Season Gift",
+            "amount": 250,
+            "orderDate": "2015-02-15T00:00:00Z",
+            "availablity": 1,
+            "items": [
+                            {
+                                "prodDetailId": 17890,
+                                "prodDetailDesc": "PS 3",
+                                "amount": "150",
+                                "qty": 1
+                            }, {
+                                "prodDetailId": 17891,
+                                "prodDetailDesc": "Heart shape Ring",
+                                "amount": "100",
+                                "qty": 1
+                            }, ]
+        }, {
+            "productid": 1001457,
+            "productname": "Christmas Season Gift",
+            "amount": 349,
+            "orderDate": "2015-04-15T00:00:00Z",
+            "availablity": 1,
+            "items": [{
+                "prodDetailId": 17900,
+                "prodDetailDesc": "Choclate Giftbox",
+                "amount": "150",
+                "qty": 1
+            }, {
+                "prodDetailId": 17901,
+                "prodDetailDesc": "Xbox 360",
+                "amount": "199",
+                "qty": 1
+
+            }, ]
+        }, {
+            "productid": 1001458,
+            "productname": "Birthday Gift",
+            "availablity": "N/A",
+            "amount": 200
+        }];
+    });
+
+
+    
+</script>
+
+------------------------------------- html
+<head>
+    <title>DataTableUse</title>
+
+    <script src="~/Content/assets/javascripts/datatable-angular/js/jquery.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+    <script src="~/Content/assets/javascripts/datatable-angular/js/angular-datatables.min.js"></script>
+    <script src="~/Content/assets/javascripts/datatable-angular/js/jquery.dataTables.js"></script>
+    <link href="~/Content/assets/javascripts/datatable-angular/css/angular-datatables.bootstrap.css" rel="stylesheet" />
+
+</head>
+    <section class="panel" ng-app="TestApp" ng-controller="testController">
+        <section class="panel-body">
+            <div class="row">
+ <table class="table table-bordered table-striped" datatable="ng">
+                        <thead>
+                            <tr>
+                                <th>
+                                </th>
+                                <th>Product ID</th>
+                                <th>Name</th>
+                                <th>Order Date</th>
+                                <th>Available</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat-start="product in userList">
+                                <td>
+                                    <div class="handpointer glyphicon glyphicon-chevron-right" data-ng-click="collapse($event)" data-target="#view_{{product.productid}}" data-toggle="collapse"
+                                         aria-expanded="false"
+                                         data-ng-if="product.items!=null">
+                                    </div>
+                                </td>
+                                <td>{{ product.productid }}</td>
+                                <td>{{ product.productname }}</td>
+                                <td>{{ product.orderDate | date: 'MM/dd/yyyy'}}</td>
+                                <td>{{ product.availablity}}</td>
+                            </tr>
+                            <tr ng-repeat-end class="row" ng-repeat="item in product.items" id="view_{{product.productid}}" data-ng-if="product.items!=null">
+                                <td data-ng-bind="item.prodDetailId"></td>
+                                <td data-ng-bind="item.prodDetailDesc"></td>
+                                <td data-ng-bind="item.amount | currency"></td>
+                                <td data-ng-bind="item.qty"></td>
+                            </tr>
+                        </tbody>
+                    </table>   
+            </div>
+        </section>
+    </section>
