@@ -1,0 +1,169 @@
+ 
+        ============= [ FETCH DATA ]  =======================
+        
+        public static List<Item> PrcSetDataProduct(Item model, DataSet dsList)
+        {
+            List<Item> prodCatList = new List<Item>();
+            for (int i = 0; i < dsList.Tables[1].Rows.Count; i++)
+            {
+                Item aProduct = new Item();
+                aProduct.ProductId = Convert.ToInt32(dsList.Tables[1].Rows[i]["PrdId"].ToString());
+                aProduct.ProductCode = dsList.Tables[1].Rows[i]["PrdCode"].ToString();
+                aProduct.ProductName = dsList.Tables[1].Rows[i]["PrdName"].ToString();
+                prodCatList.Add(aProduct);
+
+            }
+            return prodCatList;
+        }
+        
+        public JsonResult GetProductList()
+        {
+           Product.Item model= new Product.Item();
+            dsList = Product.prcGetDataProduct("Product", ComId);
+            var subCatList = Product.PrcSetDataProduct(model,dsList);
+            return Json(subCatList, JsonRequestBehavior.AllowGet);
+        }
+        
+        [HttpPost]
+        public ActionResult DataTable(List<Product.Item> data)
+        {
+
+            return Json(1, JsonRequestBehavior.AllowGet);
+        }
+        
+        ====================== SCRIPT CODE ==============================
+        
+   <script>
+    var app = angular.module('myApp', []);
+    app.controller('MainCtrl', function ($scope, $http) {
+    
+        // ============== GET DATA ================== 
+        
+        $scope.MyOrders = [];
+        $http({
+            method: 'GET',
+            url: '/Product/GetProductList',
+        }).then(function (data) {
+            $scope.MyOrders = data.data;
+        })
+   // ============== TABLE COLUM ORDER ================== 
+        $scope.sort = function (keyname) {
+            $scope.sortKey = keyname;   //set the sortKey to the param passed
+            $scope.reverse = !$scope.reverse; //if true make it false and vice versa
+        }
+   // ============== POST DATA ================== 
+   
+        $scope.SubmitData = function (data) {
+            console.log(data);
+            var resp = $http({
+                method: "post",
+                url: "../Product/DataTable",
+                data: data
+            });
+            return resp;
+        };
+
+//  ================ CHECK BOX =====================
+
+        $scope.SelectAll = function () {
+            for (var i = 0; i < $scope.MyOrders.length; i++) {
+                $scope.MyOrders[i].IsSelect = $scope.allselected
+            }
+        }
+    });
+    
+    // !!!!!!!!!!!!!  SCRIPT END !!!!!!!!!!!!!!!!!!!!!
+    
+    ====================== HTML CODE ==============================
+          
+<head>
+    <script src="~/Content/assets/ngscripts/angular(1.6).js"></script>
+    <style>
+        .form-control {
+            position: relative;
+            z-index: 2;
+            float: left;
+            width: 100%;
+            margin-bottom: 0;
+            /* background-color: #fff; */
+            /* background-image: none; */
+            border: 1px solid #ccc;
+            /* border-radius: 2px !important; */
+            box-shadow: none !important;
+            /* color: #555; */
+            /* display: block; */
+            font-size: 14px;
+            height: 30px !important;
+            line-height: 1.42857;
+            padding: 6px 12px;
+            transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+            width: 100%;
+        }
+    </style>
+</head>
+
+   <body ng-app="myApp">
+    <div ng-controller="MainCtrl" class="bs-component">
+        <section class="panel">
+            <section class="panel-body">
+                <div class="row">
+                    <div class="col-md-6"></div>
+                    <div class="col-md-6">
+                        <label class="pull-right">
+                            <input type="text" ng-model="search" class="form-control " placeholder="Search">
+                        </label>
+                    </div>
+                    <div class="col-md-12">
+                        <table class="table table-bordered table-striped mb-none dataTable no-footer">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <label><input type="checkbox" ng-model="allselected" ng-click="SelectAll()"></label>
+                                        {{allselected}}
+                                    </th>
+                                    <th ng-click="sort('ProductId')">
+                                        Id <span class="glyphicon sort-icon" ng-show="sortKey=='ProductId'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                                    </th>
+                                    <th ng-click="sort('ProductCode')">Code</th>
+                                    <th ng-click="sort('ProductName')">Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr dt-rows ng-repeat="person in MyOrders|filter:search|orderBy:sortKey:reverse">
+                                    <td>
+                                        <label>
+                                            <input type="checkbox" ng-model="person.IsSelect">
+                                        </label>
+                                    </td>
+                                    <td>{{ person.ProductId }}</td>
+                                    <td>{{ person.ProductCode }}</td>
+                                    <td>{{ person.ProductName }}</td>
+                                </tr>
+                                <tr>
+                                    <td ng-show="!(MyOrders|filter:search).length" style="color:cadetblue" class="text-center" colspan="3">
+                                        data not found
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                            <tfoot>
+                                <dir-pagination-controls max-size="5"
+                                               direction-links="true"
+                                               boundary-links="true">
+                                </dir-pagination-controls>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <input type="button" class="btn btn-danger mt-md" value="Submit" ng-click="SubmitData(MyOrders)" />
+
+                </div>
+
+            </section>
+
+        </section>
+
+    </div>
+
+</body>
