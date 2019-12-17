@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script src="angular.min.js"></script>
+    <link href="bootstrap.min.css" rel="stylesheet" />
+</head>
+<body ng-app="myapp" ng-controller="myctrl">
+
+    <div class="col-md-8 col-md-offset-2">
+        <select class="form-control" ng-model="model.item" ng-change="getclick(item)" ng-options="sort.name as
+            sort.name for sort in item"></select>
+    </div>
+
+    <div class="col-md-8 col-md-offset-2" style="margin-top:50px">
+        <table border="1" class="table">
+            <tr>
+                <th>name</th>
+                <th>Qty</th>
+            </tr>
+            <tbody>
+                <tr ng-repeat="x in list">
+                    <td>{{x.name}}</td>
+                    <td>
+                        <input type="text" ng-model="x.qty" focus-me="focuscall($index)" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+<script>
+    var app = angular.module("myapp", []);
+    app.controller('myctrl', function ($scope) {
+        $scope.list = [];
+        //$scope.myInputFocus = false;
+
+        $scope.focuscall = function (index) {
+            //$scope.myInputFocus = true;
+            var result = false;
+            if (index == ($scope.list.length-1)) {
+                result = true;
+            }
+            return result;
+        }
+        $scope.item = [
+            { "id": 1, "name": "volvo" },
+            { "id": 2, "name": "Saab" },
+            { "id": 3, "name": "Opel" },
+            { "id": 4, "name": "Audi" },
+        ];
+
+        $scope.message = function () {
+            return "Hello Guyes !!";
+        }
+
+        $scope.getclick = function () {
+            $scope.list.push( { "name": 'Item-123', "qty": '' })
+        }
+    });
+
+app.directive('focusMe', function ($timeout, $parse) {
+    return {
+        link: function (scope, element, attrs) {
+            var model = $parse(attrs.focusMe);
+            scope.$watch(model, function (value) {
+                if (value === true) {
+                     element[0].focus();
+                    //$timeout(function () {
+                    //    scope.$apply(model.assign(scope, false));
+                    //    element[0].focus();
+                    //}, 30);
+                }
+            });
+        }
+    };
+});
+</script>
